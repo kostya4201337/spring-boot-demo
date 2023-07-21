@@ -42,7 +42,7 @@ public class UserController {
         users.put(user.getName(), user);
         return user;
     }
-
+    // changes
     @PutMapping
     public User changeAge(@RequestBody User user) {
         users.put(user.getName(), user);
