@@ -12,28 +12,27 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
     Map<String, User> users = new HashMap<>();
 
     @GetMapping
-    @RequestMapping("/getUsers")
     public Map<String, User> getUsers() {
         return users;
     }
 
-    @RequestMapping("/getUsersByAge/{min}/{max}")
-    public List<User> getByAge(@PathVariable int min, @PathVariable int max) {
-        List<User> sorted = new ArrayList<>(users.values());
-        for (int i = 0; i < sorted.size(); i++) {
-            if (sorted.get(i).getAge() < min || sorted.get(i).getAge() > max) {
-                sorted.remove(i);
-                i--;
+    @GetMapping("/age")
+    public List<User> getUsersByAge(@RequestParam int min, @RequestParam int max) {
+        List<User> result = new ArrayList<>();
+        for (Map.Entry<String, User> entry : users.entrySet()) {
+            if (entry.getValue().getAge() >= min && entry.getValue().getAge() <= max) {
+                result.add(entry.getValue());
             }
         }
-        return sorted;
+        return result;
     }
 
-    @RequestMapping("/getUser/{name}")
-    public User getUser(@PathVariable String name) {
+    @GetMapping("{name}")
+    public User getUserByName(@PathVariable String name) {
         return users.get(name);
     }
 
@@ -42,7 +41,7 @@ public class UserController {
         users.put(user.getName(), user);
         return user;
     }
-    //change
+
     @PutMapping
     public User changeAge(@RequestBody User user) {
         users.put(user.getName(), user);
