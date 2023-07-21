@@ -23,9 +23,8 @@ public class UserController {
     @GetMapping("/age")
     public List<User> getUsersByAge(@RequestParam int min, @RequestParam int max) {
 
-        List<User> result = users.entrySet().stream()
-                .filter(user ->  user.getValue().getAge() >= min && user.getValue().getAge() <= max)
-                .map(entry -> entry.getValue())
+        List<User> result = users.values().stream()
+                .filter(user -> user.getAge() >= min && user.getAge() <= max)
                 .toList();
 
         return result;
