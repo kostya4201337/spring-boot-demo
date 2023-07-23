@@ -1,7 +1,7 @@
 # Megacoolname
 
 Software for working with the user database.
-![alt text](https://ibb.co/MV5QMp7)
+![img.png](img.png)![аы](https://ibb.co/MV5QMp7)
 
 ## Stack of technologies
 [Server] Java
