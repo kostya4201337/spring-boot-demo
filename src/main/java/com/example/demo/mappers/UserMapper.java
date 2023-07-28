@@ -15,8 +15,9 @@ public class UserMapper {
     }
 
     public List<User> map(final List<UserEntity> userEntity){
-        final List<User> users = new ArrayList<>();
-        userEntity.forEach(userEntity1 -> users.add(map(userEntity1)));
-        return users;
+        return userEntity
+                .stream()
+                .map(this::map)
+                .toList();
     }
 }

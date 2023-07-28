@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
         return userRepository
                 .findAll()
                 .stream()
-                .map(userEntity -> userMapper.map(userEntity))
+                .map(userMapper::map)
                 .toList();
     }
 
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(UserCreation user) {
+    public void addUser(final UserCreation user) {
         userRepository.save(userEntityMapper.map(user));
     }
 

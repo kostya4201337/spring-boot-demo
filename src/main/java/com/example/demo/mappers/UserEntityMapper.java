@@ -14,10 +14,10 @@ import java.util.Date;
 @Component
 public class UserEntityMapper {
 
-    public UserEntity map(UserCreation userCreation) {
-        return new UserEntity(userCreation.getName(), userCreation.getAge(), LocalDateTime.now(), LocalDateTime.now(), Role.USER, userCreation.getPassword());
+    public UserEntity map(final UserCreation userCreation) {
+        return new UserEntity(userCreation.getName(), userCreation.getAge(), null, null, Role.USER, userCreation.getPassword());
     }
-    public UserEntity map(UserUpdate userUpdate) {
-        return new UserEntity(userUpdate.getId(), userUpdate.getName(), userUpdate.getAge(), LocalDateTime.now(), LocalDateTime.now(), userUpdate.getRole(), userUpdate.getPassword());
+    public UserEntity map(final UserUpdate userUpdate) {
+        return new UserEntity(userUpdate.getId(), userUpdate.getName(), userUpdate.getAge(), null, null, userUpdate.getRole(), userUpdate.getPassword());
     }
 }
