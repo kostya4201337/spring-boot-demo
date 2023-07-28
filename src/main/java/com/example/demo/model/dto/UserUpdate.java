@@ -18,7 +18,7 @@ public class UserUpdate {
 
     private String password;
 
-    public UserUpdate (long id, String name, int age, Role role, String password) {
+    public UserUpdate (final long id, final String name, final int age, final Role role, final String password) {
         this.id = id;
         this.name = name;
         this.age = age;

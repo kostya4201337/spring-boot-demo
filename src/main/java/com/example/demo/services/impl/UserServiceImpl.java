@@ -11,6 +11,7 @@ import com.example.demo.services.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -19,27 +20,29 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
     private final UserMapper userMapper;
 
     private final UserEntityMapper userEntityMapper;
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, UserEntityMapper userEntityMapper) {
+
+    public UserServiceImpl(final UserRepository userRepository, final UserMapper userMapper, final UserEntityMapper userEntityMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.userEntityMapper = userEntityMapper;
     }
 
-
     @Override
     public List<User> getUsers() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        List<User> users = userMapper.map(userEntities);
-        return users;
+        return userRepository
+                .findAll()
+                .stream()
+                .map(userEntity -> userMapper.map(userEntity))
+                .toList();
     }
 
     @Override
     public List<User> getUsersByAgeRange(final int min, final int max) {
-        List<User> users = userRepository.findByAgeBetween(min, max);
-        return users;
+        return userRepository.findByAgeBetween(min, max);
     }
 
     @Override
@@ -48,23 +51,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String addUser(UserCreation user) {
+    public void addUser(UserCreation user) {
         userRepository.save(userEntityMapper.map(user));
-        return "User has been added";
-    }
-
-    @Transactional
-    public String updateUser(final UserUpdate userUpdate) {
-        Date creationDate = userRepository.getById(userUpdate.getId()).getCreatedAt();
-        UserEntity updatedUserEntity = userEntityMapper.map(userUpdate);
-        updatedUserEntity.setCreatedAt(creationDate);
-        userRepository.save(updatedUserEntity);
-        return "User has been updated";
     }
 
     @Override
-    public String deleteUser(final long id) {
-        userRepository.delete(userRepository.getById(id));
-        return "User has been deleted";
+    public void updateUser(final UserUpdate userUpdate) {
+        final LocalDateTime creationDate = userRepository.getById(userUpdate.getId()).getCreatedAt();
+        final UserEntity updatedUserEntity = userEntityMapper.map(userUpdate);
+        updatedUserEntity.setCreatedAt(creationDate);
+        userRepository.save(updatedUserEntity);
+    }
+
+    @Override
+    public void deleteUser(final long id) {
+        userRepository.deleteById(id);
     }
 }

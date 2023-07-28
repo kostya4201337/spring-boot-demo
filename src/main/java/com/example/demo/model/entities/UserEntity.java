@@ -4,12 +4,14 @@ import com.example.demo.model.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity(name="users")
-//@Table(name="users")
 public class UserEntity {
 
     @Id
@@ -21,19 +23,22 @@ public class UserEntity {
 
     private int age;
 
-    private Date createdAt;
-
-    private Date updatedAt;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 
     private String password;
 
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
     public UserEntity() {
 
     }
-    public UserEntity(String name, int age, Date createdAt, Date updatedAt, Role role, String password) {
+
+    public UserEntity(final String name, final int age, final LocalDateTime createdAt, final LocalDateTime updatedAt, final Role role, final String password) {
         this.name = name;
         this.age = age;
         this.createdAt = createdAt;
@@ -42,7 +47,7 @@ public class UserEntity {
         this.password = password;
     }
 
-    public UserEntity(long id, String name, int age, Date createdAt, Date updatedAt, Role role, String password) {
+    public UserEntity(final long id, final String name, final int age, final LocalDateTime createdAt, final LocalDateTime updatedAt, final Role role, final String password) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -52,36 +57,35 @@ public class UserEntity {
         this.password = password;
     }
 
-//    public UserEntity(String name, int age, String password) {
-//        this.name = name;
-//        this.age = age;
-//        this.password = password;
-//    }
-
-
     public long getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
+
     public int getAge() {
         return age;
     }
+
     public Role getRole() {
         return role;
     }
+
     public String getPassword() {
         return password;
     }
-    public Date getCreatedAt() {
+
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    public Date getUpdatedAt() {
+
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 

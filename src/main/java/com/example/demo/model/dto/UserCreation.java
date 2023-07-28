@@ -1,12 +1,14 @@
 package com.example.demo.model.dto;
 
 public class UserCreation {
+
     private String name;
+
     private int age;
 
     private String password;
 
-    public UserCreation(String name, int age, String password) {
+    public UserCreation(final String name, final int age, final String password) {
         this.name = name;
         this.age = age;
         this.password = password;

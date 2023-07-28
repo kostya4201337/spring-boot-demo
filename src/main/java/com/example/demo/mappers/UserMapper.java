@@ -10,19 +10,13 @@ import java.util.List;
 
 @Component
 public class UserMapper {
-    public User map(UserEntity userEntity){
-        User user = new User(userEntity.getId(), userEntity.getName(), userEntity.getAge(), userEntity.getCreatedAt(), userEntity.getUpdatedAt(), userEntity.getRole());
-        return user;
+    public User map(final UserEntity userEntity){
+        return new User(userEntity.getId(), userEntity.getName(), userEntity.getAge(), userEntity.getCreatedAt(), userEntity.getUpdatedAt(), userEntity.getRole());
     }
 
-    public List<User> map(List<UserEntity> userEntity){
-        List<User> users = new ArrayList<>();
-
-        for (int i = 0; i < userEntity.size(); i++) {
-            User user = map(userEntity.get(i));
-            users.add(user);
-        }
-
+    public List<User> map(final List<UserEntity> userEntity){
+        final List<User> users = new ArrayList<>();
+        userEntity.forEach(userEntity1 -> users.add(map(userEntity1)));
         return users;
     }
 }

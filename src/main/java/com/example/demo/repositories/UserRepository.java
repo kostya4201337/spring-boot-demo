@@ -11,8 +11,5 @@ import java.util.OptionalInt;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-//  Optional<UserEntity> findUserEntityById(int id);
-
     List<User> findByAgeBetween(int min, int max);
-
 }

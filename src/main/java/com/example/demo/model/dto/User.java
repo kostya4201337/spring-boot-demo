@@ -2,18 +2,28 @@ package com.example.demo.model.dto;
 
 import com.example.demo.model.Role;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class User {
     private long id;
+
     private String name;
+
     private int age;
-    private Date createdAt;
-    private Date updatedAt;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
     private Role role;
 
-    public User(long id, String name, int age, Date createdAt, Date updatedAt, Role role) {
+    public User(final long id, final String name, final int age, final LocalDateTime createdAt, final LocalDateTime updatedAt, final Role role) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -34,10 +44,10 @@ public class User {
     public Role getRole() {
         return role;
     }
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 

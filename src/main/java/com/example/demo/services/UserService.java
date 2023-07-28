@@ -16,9 +16,9 @@ public interface UserService {
 
     User getUserById(final long id);
 
-    String addUser(UserCreation user);
+    void addUser(UserCreation user);
 
-    String updateUser(UserUpdate userUpdate);
+    void updateUser(UserUpdate userUpdate);
 
-    String deleteUser(final long id);
+    void deleteUser(final long id);
 }
