@@ -1,21 +1,24 @@
 package com.example.demo.services;
 
-import com.example.demo.model.User;
+import com.example.demo.model.dto.User;
+import com.example.demo.model.dto.UserCreation;
+import com.example.demo.model.dto.UserUpdate;
+import com.example.demo.model.entities.UserEntity;
 
 import java.util.List;
 import java.util.Map;
 
 public interface UserService {
 
-    Map<String, User> getUsers();
+    List<User> getUsers();
 
-    List<User> getUsersByAge(int min, int max);
+    List<User> getUsersByAgeRange(int min, int max);
 
-    User getUserByName(String name);
+    User getUserById(final long id);
 
-    User addUser(User user);
+    void addUser(UserCreation user);
 
-    User changeAge(User user);
+    void updateUser(UserUpdate userUpdate);
 
-    void deleteUser(String name);
+    void deleteUser(final long id);
 }

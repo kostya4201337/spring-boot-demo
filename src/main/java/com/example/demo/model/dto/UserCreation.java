@@ -1,12 +1,17 @@
-package com.example.demo.model;
+package com.example.demo.model.dto;
 
-public class User {
+public class UserCreation {
+
     private String name;
+
     private int age;
 
-    public User(String name, int age) {
+    private String password;
+
+    public UserCreation(final String name, final int age, final String password) {
         this.name = name;
         this.age = age;
+        this.password = password;
     }
 
     public int getAge() {
@@ -15,6 +20,10 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setAge(int age) {
