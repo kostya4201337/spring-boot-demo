@@ -22,19 +22,33 @@ import java.util.Optional;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private static final String noUsersFoundWarn = "no users found in DB";
+    private static final String NO_USERS_FOUND_WARN = "no users found in DB";
 
-    private static final String ageValidError = "age validation error";
+    private static final String AGE_VALID_ERROR = "age validation error";
 
-    private static final String userDeleteInfo = "user has been successfully deleted";
+    private static final String USER_DELETE_INFO = "user has been successfully deleted";
 
-    private static final String userDeleteError = "user with the given ID does not exist and can't be deleted";
+    private static final String USER_DELETE_ERROR = "user with the given ID does not exist and can't be deleted";
 
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
 
     private final UserEntityMapper userEntityMapper;
+
+    private void ageValidation (int age, long id) {
+        if (age < 0) {
+            log.error(AGE_VALID_ERROR + ", user id: " + id);
+            throw new RuntimeException(AGE_VALID_ERROR + ", user id: " + id);
+        }
+    }
+
+    private void ageValidation (int age) {
+        if (age < 0) {
+            log.error(AGE_VALID_ERROR);
+            throw new RuntimeException(AGE_VALID_ERROR);
+        }
+    }
 
     public UserServiceImpl(final UserRepository userRepository, final UserMapper userMapper, final UserEntityMapper userEntityMapper) {
         this.userRepository = userRepository;
@@ -50,8 +64,8 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::map)
                 .toList();
         if (users.isEmpty()) {
-            log.warn(noUsersFoundWarn);
-            throw new RuntimeException(noUsersFoundWarn);
+            log.warn(NO_USERS_FOUND_WARN);
+            throw new RuntimeException(NO_USERS_FOUND_WARN);
         }
         return users;
     }
@@ -68,19 +82,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(final UserCreation user) {
-        if (user.getAge() < 0) {
-            log.error(ageValidError);
-            throw new RuntimeException(ageValidError);
-        }
+        ageValidation(user.getAge());
         userRepository.save(userEntityMapper.map(user));
     }
 
     @Override
     public void updateUser(final UserUpdate userUpdate) {
-        if (userUpdate.getAge() < 0) {
-            log.error(ageValidError);
-            throw new RuntimeException(ageValidError);
-        }
+        ageValidation(userUpdate.getAge(), userUpdate.getId());
+
         final UserEntity updatedUserEntity = userRepository.getById(userUpdate.getId());
         updatedUserEntity.setName(userUpdate.getName());
         updatedUserEntity.setAge(userUpdate.getAge());
@@ -92,10 +101,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(final long id) {
         if (!userRepository.existsById(id)) {
-            log.error(userDeleteError);
-            throw new RuntimeException(userDeleteError);
+            log.error(USER_DELETE_ERROR);
+            throw new RuntimeException(USER_DELETE_ERROR);
         }
         userRepository.deleteById(id);
-        log.info(userDeleteInfo);
+        log.info(USER_DELETE_INFO  + ", user id: " + id);
     }
 }

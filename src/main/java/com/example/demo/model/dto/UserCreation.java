@@ -35,9 +35,8 @@ public class UserCreation {
         if (age < 0) {
             log.error(ageValidError);
             throw new RuntimeException(ageValidError);
-        } else {
-            this.age = age;
         }
+        this.age = age;
     }
 
     public void setName(String name) {
