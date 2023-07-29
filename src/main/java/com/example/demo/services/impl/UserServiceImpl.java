@@ -8,6 +8,7 @@ import com.example.demo.model.dto.UserUpdate;
 import com.example.demo.model.entities.UserEntity;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -33,11 +35,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers() {
-        return userRepository
+        List<User> users = userRepository
                 .findAll()
                 .stream()
                 .map(userMapper::map)
                 .toList();
+        if(users.size() == 0){
+            log.warn("no users found in DB");
+        }
+        return users;
     }
 
     @Override
@@ -51,20 +57,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(final UserCreation user) {
+    public boolean addUser(final UserCreation user) {
+        if (user.getAge() < 0) {
+            log.error("age validation error");
+            return false;
+        }
         userRepository.save(userEntityMapper.map(user));
+        return true;
     }
 
     @Override
-    public void updateUser(final UserUpdate userUpdate) {
+    public boolean updateUser(final UserUpdate userUpdate) {
+        if (userUpdate.getAge() < 0) {
+            log.error("age validation error");
+            return false;
+        }
+
         final LocalDateTime creationDate = userRepository.getById(userUpdate.getId()).getCreatedAt();
         final UserEntity updatedUserEntity = userEntityMapper.map(userUpdate);
         updatedUserEntity.setCreatedAt(creationDate);
         userRepository.save(updatedUserEntity);
+        return true;
+
     }
 
     @Override
-    public void deleteUser(final long id) {
-        userRepository.deleteById(id);
+    public boolean deleteUser(final long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            log.info("user has been successfully deleted");
+            return true;
+        }
+        log.error("user with the given ID does not exist and can't be deleted");
+        return false;
     }
 }

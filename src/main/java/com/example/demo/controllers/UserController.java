@@ -38,20 +38,17 @@ public class UserController {
 
     @PostMapping
     public String addUser(@RequestBody final UserCreation user) {
-        userService.addUser(user);
-        return "User has been added";
+        return "add result: " + String.valueOf(userService.addUser(user));
     }
 
     @PutMapping
     public String updateUser(@RequestBody final UserUpdate userUpdate) {
-        userService.updateUser(userUpdate);
-        return "User has been updated";
+        return "updated result: " + String.valueOf(userService.updateUser(userUpdate));
     }
 
     @DeleteMapping("{id}")
     public String deleteUser(@PathVariable final long id) {
-        userService.deleteUser(id);
-        return "User has been deleted";
+        return "delete result: " + String.valueOf(userService.deleteUser(id));
     }
 }
 
