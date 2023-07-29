@@ -9,7 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
-@Slf4j
 public class User {
     private long id;
 

@@ -9,6 +9,7 @@ import com.example.demo.model.entities.UserEntity;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,14 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
+
+    private static final String noUsersFoundWarn = "no users found in DB";
+
+    private static final String ageValidError = "age validation error";
+
+    private static final String userDeleteInfo = "user has been successfully deleted";
+
+    private static final String userDeleteError = "user with the given ID does not exist and can't be deleted";
 
     private final UserRepository userRepository;
 
@@ -40,8 +49,9 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(userMapper::map)
                 .toList();
-        if(users.size() == 0){
-            log.warn("no users found in DB");
+        if(users.isEmpty()){
+            log.warn(noUsersFoundWarn);
+            throw new RuntimeException(noUsersFoundWarn);
         }
         return users;
     }
@@ -59,8 +69,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean addUser(final UserCreation user) {
         if (user.getAge() < 0) {
-            log.error("age validation error");
-            return false;
+            log.error(ageValidError);
+            throw new RuntimeException(ageValidError);
         }
         userRepository.save(userEntityMapper.map(user));
         return true;
@@ -69,8 +79,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUser(final UserUpdate userUpdate) {
         if (userUpdate.getAge() < 0) {
-            log.error("age validation error");
-            return false;
+            log.error(ageValidError);
+            throw new RuntimeException(ageValidError);
         }
 
         final LocalDateTime creationDate = userRepository.getById(userUpdate.getId()).getCreatedAt();
@@ -85,10 +95,10 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUser(final long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
-            log.info("user has been successfully deleted");
+            log.info(userDeleteInfo);
             return true;
         }
-        log.error("user with the given ID does not exist and can't be deleted");
-        return false;
+        log.error(userDeleteError);
+        throw new RuntimeException(userDeleteError);
     }
 }
