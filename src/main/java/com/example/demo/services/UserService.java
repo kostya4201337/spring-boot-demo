@@ -16,9 +16,9 @@ public interface UserService {
 
     User getUserById(final long id);
 
-    boolean addUser(UserCreation user);
+    void addUser(UserCreation user);
 
-    boolean updateUser(UserUpdate userUpdate);
+    void updateUser(UserUpdate userUpdate);
 
-    boolean deleteUser(final long id);
+    void deleteUser(final long id);
 }

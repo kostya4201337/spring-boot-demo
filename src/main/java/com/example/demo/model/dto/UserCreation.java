@@ -31,13 +31,12 @@ public class UserCreation {
         return password;
     }
 
-    public boolean setAge(int age) {
+    public void setAge(int age) {
         if (age < 0) {
             log.error(ageValidError);
             throw new RuntimeException(ageValidError);
         } else {
             this.age = age;
-            return true;
         }
     }
 

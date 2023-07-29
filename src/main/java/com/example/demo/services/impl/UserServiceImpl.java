@@ -44,12 +44,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers() {
-        List<User> users = userRepository
+        final List<User> users = userRepository
                 .findAll()
                 .stream()
                 .map(userMapper::map)
                 .toList();
-        if(users.isEmpty()){
+        if (users.isEmpty()) {
             log.warn(noUsersFoundWarn);
             throw new RuntimeException(noUsersFoundWarn);
         }
@@ -67,38 +67,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean addUser(final UserCreation user) {
+    public void addUser(final UserCreation user) {
         if (user.getAge() < 0) {
             log.error(ageValidError);
             throw new RuntimeException(ageValidError);
         }
         userRepository.save(userEntityMapper.map(user));
-        return true;
     }
 
     @Override
-    public boolean updateUser(final UserUpdate userUpdate) {
+    public void updateUser(final UserUpdate userUpdate) {
         if (userUpdate.getAge() < 0) {
             log.error(ageValidError);
             throw new RuntimeException(ageValidError);
         }
-
-        final LocalDateTime creationDate = userRepository.getById(userUpdate.getId()).getCreatedAt();
-        final UserEntity updatedUserEntity = userEntityMapper.map(userUpdate);
-        updatedUserEntity.setCreatedAt(creationDate);
+        final UserEntity updatedUserEntity = userRepository.getById(userUpdate.getId());
+        updatedUserEntity.setName(userUpdate.getName());
+        updatedUserEntity.setAge(userUpdate.getAge());
+        updatedUserEntity.setRole(userUpdate.getRole());
+        updatedUserEntity.setPassword(userUpdate.getPassword());
         userRepository.save(updatedUserEntity);
-        return true;
-
     }
 
     @Override
-    public boolean deleteUser(final long id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            log.info(userDeleteInfo);
-            return true;
+    public void deleteUser(final long id) {
+        if (!userRepository.existsById(id)) {
+            log.error(userDeleteError);
+            throw new RuntimeException(userDeleteError);
         }
-        log.error(userDeleteError);
-        throw new RuntimeException(userDeleteError);
+        userRepository.deleteById(id);
+        log.info(userDeleteInfo);
     }
 }
