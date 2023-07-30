@@ -83,12 +83,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(final long id) {
-        if (userRepository.findById(id).isEmpty()) {
+        Optional<UserEntity> userEntity = userRepository.findById(id);
+        if (userEntity.isEmpty()) {
             log.error(GET_USER_BY_ID_ERROR);
             throw new RuntimeException(GET_USER_BY_ID_ERROR);
         }
 
-        return userMapper.map(userRepository.findById(id).get());
+        return userMapper.map(userEntity.get());
     }
 
     @Override
@@ -100,13 +101,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(final UserUpdate userUpdate) {
         ageValidation(userUpdate.getAge(), userUpdate.getId());
+        Optional<UserEntity> userEntity = userRepository.findById(userUpdate.getId());
 
-        if (userRepository.findById(userUpdate.getId()).isEmpty()) {
+        if (userEntity.isEmpty()) {
             log.error(USER_UPDATE_ERROR);
             throw new RuntimeException(USER_UPDATE_ERROR);
         }
 
-        final UserEntity updatedUserEntity = userRepository.findById(userUpdate.getId()).get();
+        final UserEntity updatedUserEntity = userEntity.get();
         updatedUserEntity.setName(userUpdate.getName());
         updatedUserEntity.setAge(userUpdate.getAge());
         updatedUserEntity.setRole(userUpdate.getRole());
