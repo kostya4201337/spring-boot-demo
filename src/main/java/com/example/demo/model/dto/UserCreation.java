@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserCreation {
 
-    private static final String ageValidError = "age validation error";
+    private static final String AGE_VALID_ERROR = "age validation error";
 
     private String name;
 
@@ -33,8 +33,8 @@ public class UserCreation {
 
     public void setAge(int age) {
         if (age < 0) {
-            log.error(ageValidError);
-            throw new RuntimeException(ageValidError);
+            log.error(AGE_VALID_ERROR);
+            throw new RuntimeException(AGE_VALID_ERROR);
         }
         this.age = age;
     }

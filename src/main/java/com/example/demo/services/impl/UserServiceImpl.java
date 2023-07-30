@@ -18,17 +18,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
+
+
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
 
     private static final String NO_USERS_FOUND_WARN = "no users found in DB";
 
-    private static final String AGE_VALID_ERROR = "age validation error";
+    private static final String AGE_VALID_ERROR = "user with %s id age validation error";
 
-    private static final String USER_DELETE_INFO = "user has been successfully deleted";
+    private static final String USER_DELETE_INFO = "user with %s id has been deleted";
 
     private static final String USER_DELETE_ERROR = "user with the given ID does not exist and can't be deleted";
+
+    private static final String USER_UPDATE_ERROR = "user with given id does not exist and can't be updated";
+
+    private static final String GET_USER_BY_ID_ERROR = "user with given id doesn't exist";
 
     private final UserRepository userRepository;
 
@@ -38,8 +45,8 @@ public class UserServiceImpl implements UserService {
 
     private void ageValidation (int age, long id) {
         if (age < 0) {
-            log.error(AGE_VALID_ERROR + ", user id: " + id);
-            throw new RuntimeException(AGE_VALID_ERROR + ", user id: " + id);
+            log.error(format(AGE_VALID_ERROR, id));
+            throw new RuntimeException(format(AGE_VALID_ERROR, id));
         }
     }
 
@@ -65,7 +72,6 @@ public class UserServiceImpl implements UserService {
                 .toList();
         if (users.isEmpty()) {
             log.warn(NO_USERS_FOUND_WARN);
-            throw new RuntimeException(NO_USERS_FOUND_WARN);
         }
         return users;
     }
@@ -77,7 +83,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(final long id) {
-        return userMapper.map(userRepository.getById(id));
+        if (userRepository.findById(id).isEmpty()) {
+            log.error(GET_USER_BY_ID_ERROR);
+            throw new RuntimeException(GET_USER_BY_ID_ERROR);
+        }
+
+        return userMapper.map(userRepository.findById(id).get());
     }
 
     @Override
@@ -90,7 +101,12 @@ public class UserServiceImpl implements UserService {
     public void updateUser(final UserUpdate userUpdate) {
         ageValidation(userUpdate.getAge(), userUpdate.getId());
 
-        final UserEntity updatedUserEntity = userRepository.getById(userUpdate.getId());
+        if (userRepository.findById(userUpdate.getId()).isEmpty()) {
+            log.error(USER_UPDATE_ERROR);
+            throw new RuntimeException(USER_UPDATE_ERROR);
+        }
+
+        final UserEntity updatedUserEntity = userRepository.findById(userUpdate.getId()).get();
         updatedUserEntity.setName(userUpdate.getName());
         updatedUserEntity.setAge(userUpdate.getAge());
         updatedUserEntity.setRole(userUpdate.getRole());
@@ -105,6 +121,6 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException(USER_DELETE_ERROR);
         }
         userRepository.deleteById(id);
-        log.info(USER_DELETE_INFO  + ", user id: " + id);
+        log.info(format(USER_DELETE_INFO, id));
     }
 }
