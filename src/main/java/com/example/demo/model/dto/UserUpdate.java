@@ -3,6 +3,7 @@ package com.example.demo.model.dto;
 import com.example.demo.model.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 

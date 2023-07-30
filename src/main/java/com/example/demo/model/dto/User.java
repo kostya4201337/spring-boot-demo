@@ -2,6 +2,7 @@ package com.example.demo.model.dto;
 
 import com.example.demo.model.Role;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 

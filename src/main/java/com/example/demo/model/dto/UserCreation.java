@@ -1,6 +1,11 @@
 package com.example.demo.model.dto;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class UserCreation {
+
+    private static final String AGE_VALID_ERROR = "age validation error";
 
     private String name;
 
@@ -28,7 +33,8 @@ public class UserCreation {
 
     public void setAge(int age) {
         if (age < 0) {
-            return;
+            log.error(AGE_VALID_ERROR);
+            throw new RuntimeException(AGE_VALID_ERROR);
         }
         this.age = age;
     }

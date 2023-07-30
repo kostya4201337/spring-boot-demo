@@ -15,6 +15,12 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
+    private static final String USER_ADDED_MSG = "User has been added";
+
+    private static final String USER_UPDATED_MSG = "User has been updated";
+
+    private static final String USER_DELETED_MSG  = "User has been deleted";
+
     private final UserService userService;
 
     public UserController(final UserService userService) {
@@ -39,19 +45,19 @@ public class UserController {
     @PostMapping
     public String addUser(@RequestBody final UserCreation user) {
         userService.addUser(user);
-        return "User has been added";
+        return USER_ADDED_MSG;
     }
 
     @PutMapping
     public String updateUser(@RequestBody final UserUpdate userUpdate) {
         userService.updateUser(userUpdate);
-        return "User has been updated";
+        return USER_UPDATED_MSG;
     }
 
     @DeleteMapping("{id}")
     public String deleteUser(@PathVariable final long id) {
         userService.deleteUser(id);
-        return "User has been deleted";
+        return USER_DELETED_MSG;
     }
 }
 

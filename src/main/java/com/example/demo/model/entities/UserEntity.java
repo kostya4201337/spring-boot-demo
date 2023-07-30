@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -85,8 +86,31 @@ public class UserEntity {
         return updatedAt;
     }
 
+    public void setId(final long id) {
+        this.id = id;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public void setAge(final int age) {
+        this.age = age;
+    }
+
+    public void setRole(final Role role) {
+        this.role = role;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
     public void setCreatedAt(final LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
+    public void setUpdatedAt(final LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
