@@ -9,12 +9,8 @@ import com.example.demo.model.entities.UserEntity;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,20 +38,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     private final UserEntityMapper userEntityMapper;
-
-    private void ageValidation (int age, long id) {
-        if (age < 0) {
-            log.error(format(AGE_VALID_ERROR, id));
-            throw new RuntimeException(format(AGE_VALID_ERROR, id));
-        }
-    }
-
-    private void ageValidation (int age) {
-        if (age < 0) {
-            log.error(AGE_VALID_ERROR);
-            throw new RuntimeException(AGE_VALID_ERROR);
-        }
-    }
 
     public UserServiceImpl(final UserRepository userRepository, final UserMapper userMapper, final UserEntityMapper userEntityMapper) {
         this.userRepository = userRepository;
@@ -95,7 +77,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addUser(final UserCreation user) {
         ageValidation(user.getAge());
-        userRepository.save(userEntityMapper.map(user));
+        UserEntity userEntity = userEntityMapper.map(user);
+        userRepository.save(userEntity);
     }
 
     @Override
@@ -114,6 +97,20 @@ public class UserServiceImpl implements UserService {
         updatedUserEntity.setRole(userUpdate.getRole());
         updatedUserEntity.setPassword(userUpdate.getPassword());
         userRepository.save(updatedUserEntity);
+    }
+
+    private void ageValidation (int age, long id) {
+        if (age < 0) {
+            log.error(format(AGE_VALID_ERROR, id));
+            throw new RuntimeException(format(AGE_VALID_ERROR, id));
+        }
+    }
+
+    private void ageValidation (int age) {
+        if (age < 0) {
+            log.error(AGE_VALID_ERROR);
+            throw new RuntimeException(AGE_VALID_ERROR);
+        }
     }
 
     @Override
