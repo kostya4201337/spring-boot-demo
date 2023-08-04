@@ -1,11 +1,9 @@
 package com.example.demo.mappers;
 
-import com.example.demo.model.Role;
 import com.example.demo.model.dto.User;
 import com.example.demo.model.entities.UserEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -20,4 +18,5 @@ public class UserMapper {
                 .map(this::map)
                 .toList();
     }
+
 }

@@ -4,13 +4,20 @@ import java.sql.Timestamp;
 
 public class ApiError {
 
-    public final String message;
+    private final String message;
 
-    public final Timestamp timestamp;
+    private final Timestamp timestamp;
 
     public ApiError(final String message, final Timestamp timestamp) {
         this.message = message;
         this.timestamp = timestamp;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
 }
