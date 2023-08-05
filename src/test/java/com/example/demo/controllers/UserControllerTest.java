@@ -102,7 +102,7 @@ class UserControllerTest {
         willDoNothing().given(userService).deleteUser(1);
 
         //when
-        String message = userController.deleteUser(1);
+        String message = userController.deleteUser(2);
 
         //then
         String expectedMessage = "User has been deleted";
