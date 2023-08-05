@@ -8,6 +8,8 @@ import com.example.demo.model.dto.UserCreation;
 import com.example.demo.model.dto.UserUpdate;
 import com.example.demo.model.entities.UserEntity;
 import com.example.demo.repositories.UserRepository;
+import com.example.demo.services.exception.AgeValidationException;
+import com.example.demo.services.exception.NoUserFoundByIdException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -106,7 +108,7 @@ class UserServiceImplTest {
 
         //then
         assertThat(throwable)
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(NoUserFoundByIdException.class)
                 .hasMessageContaining(GET_USER_BY_ID_ERROR);
     }
 
@@ -134,7 +136,7 @@ class UserServiceImplTest {
 
         //then
         assertThat(throwable)
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(AgeValidationException.class)
                 .hasMessageContaining(AGE_VALID_ERROR);
     }
 
@@ -164,7 +166,7 @@ class UserServiceImplTest {
 
         //then
         assertThat(throwable)
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(AgeValidationException.class)
                 .hasMessageContaining(AGE_VALID_ERROR);
     }
 
@@ -180,7 +182,7 @@ class UserServiceImplTest {
 
         //then
         assertThat(throwable)
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(NoUserFoundByIdException.class)
                 .hasMessageContaining(USER_UPDATE_ERROR);
     }
 
@@ -207,7 +209,7 @@ class UserServiceImplTest {
 
         //then
         assertThat(throwable)
-                .isInstanceOf(RuntimeException.class)
+                .isInstanceOf(NoUserFoundByIdException.class)
                 .hasMessageContaining(USER_DELETE_ERROR);
     }
 }
