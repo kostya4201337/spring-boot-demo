@@ -8,6 +8,8 @@ import com.example.demo.model.dto.UserUpdate;
 import com.example.demo.model.entities.UserEntity;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
+import com.example.demo.services.exception.AgeValidationException;
+import com.example.demo.services.exception.NoUserFoundByIdException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +70,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userEntity = userRepository.findById(id);
         if (userEntity.isEmpty()) {
             log.error(GET_USER_BY_ID_ERROR);
-            throw new RuntimeException(GET_USER_BY_ID_ERROR);
+            throw new NoUserFoundByIdException(GET_USER_BY_ID_ERROR);
         }
 
         return userMapper.map(userEntity.get());
@@ -86,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
         if (userEntity.isEmpty()) {
             log.error(USER_UPDATE_ERROR);
-            throw new RuntimeException(USER_UPDATE_ERROR);
+            throw new NoUserFoundByIdException(USER_UPDATE_ERROR);
         }
 
         final UserEntity updatedUserEntity = userEntity.get();
@@ -101,7 +103,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(final long id) {
         if (!userRepository.existsById(id)) {
             log.error(USER_DELETE_ERROR);
-            throw new RuntimeException(USER_DELETE_ERROR);
+            throw new NoUserFoundByIdException(USER_DELETE_ERROR);
         }
         userRepository.deleteById(id);
         log.info(format(USER_DELETE_INFO, id));
