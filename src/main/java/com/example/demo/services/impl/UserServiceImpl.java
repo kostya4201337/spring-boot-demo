@@ -76,14 +76,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(final UserCreation user) {
-        ageValidation(user.getAge());
         UserEntity userEntity = userEntityMapper.map(user);
         userRepository.save(userEntity);
     }
 
     @Override
     public void updateUser(final UserUpdate userUpdate) {
-        ageValidation(userUpdate.getAge(), userUpdate.getId());
         Optional<UserEntity> userEntity = userRepository.findById(userUpdate.getId());
 
         if (userEntity.isEmpty()) {
@@ -97,20 +95,6 @@ public class UserServiceImpl implements UserService {
         updatedUserEntity.setRole(userUpdate.getRole());
         updatedUserEntity.setPassword(userUpdate.getPassword());
         userRepository.save(updatedUserEntity);
-    }
-
-    private void ageValidation (int age, long id) {
-        if (age < 0) {
-            log.error(format(AGE_VALID_ERROR, id));
-            throw new RuntimeException(format(AGE_VALID_ERROR, id));
-        }
-    }
-
-    private void ageValidation (int age) {
-        if (age < 0) {
-            log.error(AGE_VALID_ERROR);
-            throw new RuntimeException(AGE_VALID_ERROR);
-        }
     }
 
     @Override

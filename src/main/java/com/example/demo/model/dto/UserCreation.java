@@ -1,16 +1,19 @@
 package com.example.demo.model.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class UserCreation {
 
-    private static final String AGE_VALID_ERROR = "age validation error";
-
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
+    @Min(value = 0, message = "Age can't be less than 0")
+    @Max(value = 150, message = "Age can't be more than 150")
     private int age;
 
+    @NotBlank(message = "Password is mandatory")
     private String password;
 
     public UserCreation(final String name, final int age, final String password) {
@@ -32,10 +35,6 @@ public class UserCreation {
     }
 
     public void setAge(int age) {
-        if (age < 0) {
-            log.error(AGE_VALID_ERROR);
-            throw new RuntimeException(AGE_VALID_ERROR);
-        }
         this.age = age;
     }
 
