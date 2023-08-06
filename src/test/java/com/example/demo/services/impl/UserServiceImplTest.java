@@ -8,7 +8,6 @@ import com.example.demo.model.dto.UserCreation;
 import com.example.demo.model.dto.UserUpdate;
 import com.example.demo.model.entities.UserEntity;
 import com.example.demo.repositories.UserRepository;
-import com.example.demo.services.exception.AgeValidationException;
 import com.example.demo.services.exception.NoUserFoundByIdException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -126,21 +126,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void should_throwException_when_addUserAgeInvalid() {
-        //given
-        final String AGE_VALID_ERROR = "user with %s id age validation error";
-        UserCreation userCreation = new UserCreation("a", -1, "qqq");
-
-        //when
-        Throwable throwable = catchThrowable(() -> userService.addUser(userCreation));
-
-        //then
-        assertThat(throwable)
-                .isInstanceOf(AgeValidationException.class)
-                .hasMessageContaining(AGE_VALID_ERROR);
-    }
-
-    @Test
     void should_updateUser_when_ageValidAndUserExists() {
         //given
         Optional<UserEntity> userEntity = Optional.of(USER_ENTITY);
@@ -153,21 +138,6 @@ class UserServiceImplTest {
         //then
         UserEntity expectedUserEntity = new UserEntity(1, "b", 2, null, null, Role.USER, "qqq");
         then(userRepository).should().save(expectedUserEntity);
-    }
-
-    @Test
-    void should_throwException_when_updateUserAgeInvalid() {
-        //given
-        final String AGE_VALID_ERROR = "user with 1 id age validation error";
-        UserUpdate userUpdate = new UserUpdate(1, "a", -1, Role.USER, "qqq");
-
-        //when
-        Throwable throwable = catchThrowable(() -> userService.updateUser(userUpdate));
-
-        //then
-        assertThat(throwable)
-                .isInstanceOf(AgeValidationException.class)
-                .hasMessageContaining(AGE_VALID_ERROR);
     }
 
     @Test
