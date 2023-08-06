@@ -1,7 +1,7 @@
 package com.example.demo.services.exception;
 
 public class NoUserFoundByIdException extends RuntimeException {
-    public NoUserFoundByIdException(String message) {
+    public NoUserFoundByIdException(final String message) {
         super(message);
     }
 }
