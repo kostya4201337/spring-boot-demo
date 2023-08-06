@@ -1,15 +1,13 @@
 package com.example.demo.controllers;
 
-import com.example.demo.mappers.UserEntityMapper;
 import com.example.demo.model.dto.User;
 import com.example.demo.model.dto.UserCreation;
 import com.example.demo.model.dto.UserUpdate;
-import com.example.demo.model.entities.UserEntity;
 import com.example.demo.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -43,13 +41,13 @@ public class UserController {
     }
 
     @PostMapping
-    public String addUser(@RequestBody final UserCreation user) {
+    public String addUser(@Valid @RequestBody final UserCreation user) {
         userService.addUser(user);
         return USER_ADDED_MSG;
     }
 
     @PutMapping
-    public String updateUser(@RequestBody final UserUpdate userUpdate) {
+    public String updateUser(@Valid @RequestBody final UserUpdate userUpdate) {
         userService.updateUser(userUpdate);
         return USER_UPDATED_MSG;
     }

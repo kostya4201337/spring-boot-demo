@@ -3,20 +3,24 @@ package com.example.demo.model.dto;
 import com.example.demo.model.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.Date;
+import jakarta.validation.constraints.*;
 
 public class UserUpdate {
+
     private long id;
 
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
+    @Min(value = 0, message = "Age can't be less than 0")
+    @Max(value = 150, message = "Age can't be more than 150")
     private int age;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Role is mandatory")
     private Role role;
 
+    @NotBlank(message = "Password is mandatory")
     private String password;
 
     public UserUpdate (final long id, final String name, final int age, final Role role, final String password) {
