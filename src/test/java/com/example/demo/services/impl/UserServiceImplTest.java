@@ -7,6 +7,7 @@ import com.example.demo.model.dto.User;
 import com.example.demo.model.dto.UserCreation;
 import com.example.demo.model.dto.UserUpdate;
 import com.example.demo.model.entities.UserEntity;
+import com.example.demo.propery.BlackListProperties;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.exception.NoUserFoundByIdException;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -37,6 +39,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserMapper userMapper;
+
+    @Mock
+    private BlackListProperties blackListProperties;
 
     private final UserEntity USER_ENTITY = new UserEntity(1, "a", 2, null, null, Role.USER, "qqq");
     private final User USER = new User(1, "a", 2, null, null, Role.USER);
@@ -63,6 +68,24 @@ class UserServiceImplTest {
 
         given(userRepository.findAll()).willReturn(userEntities);
         given(userMapper.map(USER_ENTITY)).willReturn(USER);
+        given(blackListProperties.getNames()).willReturn(Set.of());
+
+        //when
+        List<User> users = userService.getUsers();
+
+        //then
+        List<User> expectedUsers = List.of(USER);
+        assertThat(users).containsAll(expectedUsers);
+    }
+
+    @Test
+    void should_getUsers_when_BlackListExists() {
+        //given
+        List<UserEntity> userEntities = List.of(USER_ENTITY, new UserEntity(2, "s", 14, null, null, Role.USER, "qqq"));
+
+        given(userRepository.findAll()).willReturn(userEntities);
+        given(userMapper.map(USER_ENTITY)).willReturn(USER);
+        given(blackListProperties.getNames()).willReturn(Set.of("s"));
 
         //when
         List<User> users = userService.getUsers();

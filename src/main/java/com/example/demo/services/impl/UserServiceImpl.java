@@ -6,15 +6,16 @@ import com.example.demo.model.dto.User;
 import com.example.demo.model.dto.UserCreation;
 import com.example.demo.model.dto.UserUpdate;
 import com.example.demo.model.entities.UserEntity;
+import com.example.demo.propery.BlackListProperties;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
-import com.example.demo.services.exception.AgeValidationException;
 import com.example.demo.services.exception.NoUserFoundByIdException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -41,22 +42,28 @@ public class UserServiceImpl implements UserService {
 
     private final UserEntityMapper userEntityMapper;
 
-    public UserServiceImpl(final UserRepository userRepository, final UserMapper userMapper, final UserEntityMapper userEntityMapper) {
+    private final BlackListProperties blackListProperties;
+
+    public UserServiceImpl(final UserRepository userRepository, final UserMapper userMapper, final UserEntityMapper userEntityMapper, final BlackListProperties blackListProperties) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.userEntityMapper = userEntityMapper;
+        this.blackListProperties = blackListProperties;
     }
 
     @Override
     public List<User> getUsers() {
+        final Set<String> blacklistNames = blackListProperties.getNames();
         final List<User> users = userRepository
                 .findAll()
                 .stream()
+                .filter(userEntity -> !blacklistNames.contains(userEntity.getName()))
                 .map(userMapper::map)
                 .toList();
         if (users.isEmpty()) {
             log.warn(NO_USERS_FOUND_WARN);
         }
+
         return users;
     }
 
